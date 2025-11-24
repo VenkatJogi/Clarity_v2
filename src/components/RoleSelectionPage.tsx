@@ -1,6 +1,7 @@
 import React from 'react';
 import { UserRole, useAuth } from '../contexts/AuthContext';
-import { Shield } from 'lucide-react';
+import { Moon, Sun } from 'lucide-react';
+import { useTheme } from '../contexts/ThemeContext';
 
 interface RoleSelectionPageProps {
   onRoleSelected: () => void;
@@ -23,6 +24,7 @@ const roleOptions: Array<{ id: UserRole; title: string }> = [
 
 export function RoleSelectionPage({ onRoleSelected }: RoleSelectionPageProps) {
   const { selectRole } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const [selectedRole, setSelectedRole] = React.useState<UserRole | null>(null);
   const [loading, setLoading] = React.useState(false);
 
@@ -40,24 +42,36 @@ export function RoleSelectionPage({ onRoleSelected }: RoleSelectionPageProps) {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex">
       {/* Left Side - Image */}
-      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-indigo-600 to-purple-600 relative overflow-hidden justify-center items-center">
-        <div className="absolute inset-0">
-          <div className="absolute top-20 left-20 w-72 h-72 bg-indigo-400 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-pulse" />
-          <div className="absolute -bottom-8 right-20 w-72 h-72 bg-purple-400 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-pulse" />
-        </div>
+      <div 
+        className="hidden lg:flex lg:w-1/2 relative overflow-hidden justify-center items-center"
+        style={{
+          backgroundImage: 'url(/bg.jpg)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }}
+      >
+        <div className="absolute inset-0 bg-black/70" />
         <div className="relative z-10 text-center text-white space-y-6">
           <h1 className="text-5xl font-bold">Choose Your Role</h1>
-          <p className="text-xl text-indigo-100 max-w-md">Select the role that best fits your needs to access customized features</p>
-          <div className="w-32 h-32 mx-auto bg-white/10 rounded-full flex items-center justify-center backdrop-blur">
-            <div className="w-24 h-24 bg-white/20 rounded-full flex items-center justify-center">
-              <Shield className="w-12 h-12 text-white" />
-            </div>
-          </div>
+          <p className="text-xl text-gray-200 max-w-md">Select the role that best fits your needs to access customized features</p>
         </div>
       </div>
 
       {/* Right Side - Role Selection Form */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-8 sm:p-12">
+      <div className="w-full lg:w-1/2 bg-white dark:bg-gray-800 flex flex-col items-center justify-center p-8 sm:p-12">
+        {/* Theme Toggle */}
+        <button
+          onClick={toggleTheme}
+          className="absolute top-6 right-6 p-3 rounded-xl bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+          aria-label="Toggle theme"
+        >
+          {theme === 'light' ? (
+            <Moon className="w-5 h-5 text-gray-700 dark:text-gray-300" />
+          ) : (
+            <Sun className="w-5 h-5 text-gray-700 dark:text-gray-300" />
+          )}
+        </button>
+
         <div className="w-full max-w-md">
           <form onSubmit={handleSelectRole} className="space-y-8">
             <div className="space-y-2">

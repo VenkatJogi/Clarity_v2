@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { Mail, Lock, User, ArrowRight } from 'lucide-react';
+import { Mail, Lock, User, ArrowRight, Moon, Sun } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+import { useTheme } from '../contexts/ThemeContext';
 
 interface RegisterPageProps {
   onSuccess: () => void;
@@ -9,6 +10,7 @@ interface RegisterPageProps {
 
 export function RegisterPage({ onSuccess, onSwitchToLogin }: RegisterPageProps) {
   const { register } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -65,24 +67,36 @@ export function RegisterPage({ onSuccess, onSwitchToLogin }: RegisterPageProps) 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex">
       {/* Left Side - Image */}
-      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-emerald-600 to-teal-600 relative overflow-hidden justify-center items-center">
-        <div className="absolute inset-0">
-          <div className="absolute top-20 left-20 w-72 h-72 bg-emerald-400 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-pulse" />
-          <div className="absolute -bottom-8 right-20 w-72 h-72 bg-teal-400 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-pulse" />
-        </div>
+      <div 
+        className="hidden lg:flex lg:w-1/2 relative overflow-hidden justify-center items-center"
+        style={{
+          backgroundImage: 'url(/bg.jpg)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }}
+      >
+        <div className="absolute inset-0 bg-black/70" />
         <div className="relative z-10 text-center text-white space-y-6">
           <h1 className="text-5xl font-bold">Join Us</h1>
-          <p className="text-xl text-emerald-100 max-w-md">Create your account and start exploring powerful analytics</p>
-          <div className="w-32 h-32 mx-auto bg-white/10 rounded-full flex items-center justify-center backdrop-blur">
-            <div className="w-24 h-24 bg-white/20 rounded-full flex items-center justify-center">
-              <User className="w-12 h-12 text-white" />
-            </div>
-          </div>
+          <p className="text-xl text-gray-200 max-w-md">Create your account and start exploring powerful analytics</p>
         </div>
       </div>
 
       {/* Right Side - Form */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-8 sm:p-12">
+      <div className="w-full lg:w-1/2 bg-white dark:bg-gray-800 flex flex-col items-center justify-center p-8 sm:p-12">
+        {/* Theme Toggle */}
+        <button
+          onClick={toggleTheme}
+          className="absolute top-6 right-6 p-3 rounded-xl bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+          aria-label="Toggle theme"
+        >
+          {theme === 'light' ? (
+            <Moon className="w-5 h-5 text-gray-700 dark:text-gray-300" />
+          ) : (
+            <Sun className="w-5 h-5 text-gray-700 dark:text-gray-300" />
+          )}
+        </button>
+
         <div className="w-full max-w-md space-y-8">
           <div className="space-y-2">
             <h2 className="text-4xl font-bold text-gray-900 dark:text-white">Create Account</h2>
