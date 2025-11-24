@@ -136,8 +136,8 @@ export function DetailView({ type, headline, card, details, onClose }: DetailVie
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-      <div className="relative w-full max-w-6xl max-h-[90vh] overflow-y-auto bg-white dark:bg-gray-800 rounded-3xl shadow-2xl">
-        <div className="sticky top-0 z-10 flex items-center justify-between p-6 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-t-3xl">
+      <div className="relative w-full max-w-6xl max-h-[90vh] flex flex-col bg-white dark:bg-gray-800 rounded-3xl shadow-2xl">
+        <div className="sticky top-0 z-10 flex items-center justify-between p-6 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-t-3xl flex-shrink-0">
           <div>
             <h2 className="text-3xl font-bold">
               {type === 'headline' ? headline?.title : card?.title}
@@ -148,30 +148,31 @@ export function DetailView({ type, headline, card, details, onClose }: DetailVie
           </div>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-white/20 rounded-xl transition-colors"
+            className="p-2 hover:bg-white/20 rounded-xl transition-colors flex-shrink-0 ml-4"
           >
             <X className="w-6 h-6" />
           </button>
         </div>
 
-        <div className="p-8 space-y-8">
-          {type === 'headline' && headline && (
-            <div className="space-y-6">
-              <div className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-700 dark:to-gray-800 rounded-2xl p-6 border border-blue-200 dark:border-gray-600">
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">Summary</h3>
-                <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
-                  {headline.summary}
-                </p>
-              </div>
+        <div className="overflow-y-auto flex-1">
+          <div className="p-8 space-y-8">
+            {type === 'headline' && headline && (
+              <div className="space-y-6">
+                <div className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-700 dark:to-gray-800 rounded-2xl p-6 border border-blue-200 dark:border-gray-600">
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">Summary</h3>
+                  <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+                    {headline.summary}
+                  </p>
+                </div>
 
-              <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 border border-gray-200 dark:border-gray-700">
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">Full Details</h3>
-                <p className="text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">
-                  {headline.details}
-                </p>
+                <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 border border-gray-200 dark:border-gray-700">
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">Full Details</h3>
+                  <p className="text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">
+                    {headline.details}
+                  </p>
+                </div>
               </div>
-            </div>
-          )}
+            )}
 
           {type === 'card' && details && (
             <div className="space-y-8">
@@ -231,6 +232,7 @@ export function DetailView({ type, headline, card, details, onClose }: DetailVie
               )}
             </div>
           )}
+        </div>
         </div>
       </div>
     </div>
