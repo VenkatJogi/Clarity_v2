@@ -143,6 +143,7 @@ function App() {
           'Expand product features based on user requests',
           'Implement advanced analytics for user behavior tracking',
         ],
+        metrics: metrics,
         chart_data: chartData,
       });
       setCurrentPage('details');
@@ -300,6 +301,7 @@ function App() {
                 'Expand team capacity to support continued growth momentum',
                 'Implement advanced analytics to identify next growth opportunities',
               ],
+              metrics: metrics,
               chart_data: {
                 revenue: [
                   { month: 'Q1', value: 2.0 },
@@ -312,7 +314,7 @@ function App() {
             setCurrentPage('details');
           }} />
           <InsightCardsSection cards={cards} onShowDetails={handleCardDetails} />
-          <KPISection metrics={metrics} />
+          {/* <KPISection metrics={metrics} /> */}
         </main>
 
         <Chatbot />

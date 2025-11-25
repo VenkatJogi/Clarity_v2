@@ -20,6 +20,7 @@ export interface CardDetail {
   insights: string;
   insight_points: string[];
   recommendations: string[];
+  metrics?: KPIMetric[];
   chart_data: ChartData;
   created_at: string;
 }

@@ -1,4 +1,4 @@
-import { ArrowLeft, Lightbulb, CheckCircle, TrendingUp } from 'lucide-react';
+import { ArrowLeft, Lightbulb, CheckCircle, TrendingUp, TrendingDown } from 'lucide-react';
 import { CardDetail, Headline } from '../types/dashboard';
 import { LineChart } from './charts/LineChart';
 import { BarChart } from './charts/BarChart';
@@ -148,46 +148,80 @@ export function DetailsPage({ type, headline, card, details, onBack }: DetailsPa
               </p>
             </div>
 
-            <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-700">
+            {/* <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-700">
               <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-3">Full Details</h2>
               <p className="text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">
                 {headline.details}
               </p>
+            </div> */}
+
+            {/* Key Insights and Recommendations Side by Side */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {details.insight_points && details.insight_points.length > 0 && (
+                <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-700">
+                  <div className="flex items-center gap-3 mb-4">
+                    <CheckCircle className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
+                    <h2 className="text-xl font-bold text-gray-900 dark:text-white">Key Insights</h2>
+                  </div>
+                  <ul className="space-y-3">
+                    {details.insight_points.map((point, i) => (
+                      <li key={i} className="flex items-start gap-3">
+                        <div className="w-2 h-2 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 mt-2 flex-shrink-0" />
+                        <span className="text-gray-700 dark:text-gray-300 leading-relaxed text-sm">{point}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {details.recommendations && details.recommendations.length > 0 && (
+                <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-emerald-200 dark:border-gray-700">
+                  <div className="flex items-center gap-3 mb-4">
+                    <TrendingUp className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
+                    <h2 className="text-xl font-bold text-gray-900 dark:text-white">Recommendations</h2>
+                  </div>
+                  <ul className="space-y-3">
+                    {details.recommendations.map((rec, i) => (
+                      <li key={i} className="flex items-start gap-3">
+                        <div className="flex items-center justify-center w-6 h-6 rounded-full bg-emerald-500 text-white text-sm font-bold flex-shrink-0">
+                          {i + 1}
+                        </div>
+                        <span className="text-gray-700 dark:text-gray-300 leading-relaxed text-sm">{rec}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
 
-            {details.insight_points && details.insight_points.length > 0 && (
+            {/* Key Metrics Section */}
+            {details.metrics && details.metrics.length > 0 && (
               <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-700">
-                <div className="flex items-center gap-3 mb-4">
-                  <CheckCircle className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
-                  <h2 className="text-xl font-bold text-gray-900 dark:text-white">Key Insights</h2>
-                </div>
-                <ul className="space-y-3">
-                  {details.insight_points.map((point, i) => (
-                    <li key={i} className="flex items-start gap-3">
-                      <div className="w-2 h-2 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 mt-2 flex-shrink-0" />
-                      <span className="text-gray-700 dark:text-gray-300 leading-relaxed">{point}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-
-            {details.recommendations && details.recommendations.length > 0 && (
-              <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-emerald-200 dark:border-gray-700">
-                <div className="flex items-center gap-3 mb-4">
-                  <TrendingUp className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
-                  <h2 className="text-xl font-bold text-gray-900 dark:text-white">Recommendations</h2>
-                </div>
-                <ul className="space-y-3">
-                  {details.recommendations.map((rec, i) => (
-                    <li key={i} className="flex items-start gap-3">
-                      <div className="flex items-center justify-center w-6 h-6 rounded-full bg-emerald-500 text-white text-sm font-bold flex-shrink-0">
-                        {i + 1}
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Key Metrics</h2>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {details.metrics.map((metric) => (
+                    <div key={metric.id} className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 border border-gray-200 dark:border-gray-600">
+                      <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">{metric.title}</p>
+                      <p className="text-2xl font-bold text-gray-900 dark:text-white mb-2">{metric.value}</p>
+                      <div className="flex items-center gap-2">
+                        {metric.trend === 'up' ? (
+                          <TrendingUp className="w-4 h-4 text-emerald-500" />
+                        ) : metric.trend === 'down' ? (
+                          <TrendingDown className="w-4 h-4 text-red-500" />
+                        ) : (
+                          <div className="w-4 h-4 rounded-full bg-gray-400" />
+                        )}
+                        <span className={`text-sm font-semibold ${
+                          metric.trend === 'up' ? 'text-emerald-600 dark:text-emerald-400' :
+                          metric.trend === 'down' ? 'text-red-600 dark:text-red-400' :
+                          'text-gray-600 dark:text-gray-400'
+                        }`}>
+                          {(metric as any).change || (metric.trend === 'up' ? '+' : metric.trend === 'down' ? '-' : '~') + '0%'}
+                        </span>
                       </div>
-                      <span className="text-gray-700 dark:text-gray-300 leading-relaxed">{rec}</span>
-                    </li>
+                    </div>
                   ))}
-                </ul>
+                </div>
               </div>
             )}
 
@@ -232,42 +266,77 @@ export function DetailsPage({ type, headline, card, details, onBack }: DetailsPa
               </p>
             </div>
 
-            {details.insight_points && details.insight_points.length > 0 && (
+            {/* Key Points and Recommendations Side by Side */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {details.insight_points && details.insight_points.length > 0 && (
+                <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-700">
+                  <div className="flex items-center gap-3 mb-4">
+                    <CheckCircle className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
+                    <h2 className="text-xl font-bold text-gray-900 dark:text-white">Key Insights</h2>
+                  </div>
+                  <ul className="space-y-3">
+                    {details.insight_points.map((point, i) => (
+                      <li key={i} className="flex items-start gap-3">
+                        <div className="w-2 h-2 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 mt-2 flex-shrink-0" />
+                        <span className="text-gray-700 dark:text-gray-300 leading-relaxed text-sm">{point}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {details.recommendations && details.recommendations.length > 0 && (
+                <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-emerald-200 dark:border-gray-700">
+                  <div className="flex items-center gap-3 mb-4">
+                    <TrendingUp className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
+                    <h2 className="text-xl font-bold text-gray-900 dark:text-white">Recommendations</h2>
+                  </div>
+                  <ul className="space-y-3">
+                    {details.recommendations.map((rec, i) => (
+                      <li key={i} className="flex items-start gap-3">
+                        <div className="flex items-center justify-center w-6 h-6 rounded-full bg-emerald-500 text-white text-sm font-bold flex-shrink-0">
+                          {i + 1}
+                        </div>
+                        <span className="text-gray-700 dark:text-gray-300 leading-relaxed text-sm">{rec}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+
+            {/* Key Metrics Section */}
+            {details.metrics && details.metrics.length > 0 && (
               <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-700">
-                <div className="flex items-center gap-3 mb-4">
-                  <CheckCircle className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
-                  <h2 className="text-xl font-bold text-gray-900 dark:text-white">Key Points</h2>
-                </div>
-                <ul className="space-y-3">
-                  {details.insight_points.map((point, i) => (
-                    <li key={i} className="flex items-start gap-3">
-                      <div className="w-2 h-2 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 mt-2 flex-shrink-0" />
-                      <span className="text-gray-700 dark:text-gray-300 leading-relaxed">{point}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-
-            {details.recommendations && details.recommendations.length > 0 && (
-              <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-emerald-200 dark:border-gray-700">
-                <div className="flex items-center gap-3 mb-4">
-                  <TrendingUp className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
-                  <h2 className="text-xl font-bold text-gray-900 dark:text-white">Recommendations</h2>
-                </div>
-                <ul className="space-y-3">
-                  {details.recommendations.map((rec, i) => (
-                    <li key={i} className="flex items-start gap-3">
-                      <div className="flex items-center justify-center w-6 h-6 rounded-full bg-emerald-500 text-white text-sm font-bold flex-shrink-0">
-                        {i + 1}
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Key Metrics</h2>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {details.metrics.map((metric) => (
+                    <div key={metric.id} className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 border border-gray-200 dark:border-gray-600">
+                      <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">{metric.title}</p>
+                      <p className="text-2xl font-bold text-gray-900 dark:text-white mb-2">{metric.value}</p>
+                      <div className="flex items-center gap-2">
+                        {metric.trend === 'up' ? (
+                          <TrendingUp className="w-4 h-4 text-emerald-500" />
+                        ) : metric.trend === 'down' ? (
+                          <TrendingDown className="w-4 h-4 text-red-500" />
+                        ) : (
+                          <div className="w-4 h-4 rounded-full bg-gray-400" />
+                        )}
+                        <span className={`text-sm font-semibold ${
+                          metric.trend === 'up' ? 'text-emerald-600 dark:text-emerald-400' :
+                          metric.trend === 'down' ? 'text-red-600 dark:text-red-400' :
+                          'text-gray-600 dark:text-gray-400'
+                        }`}>
+                          {(metric as any).change || (metric.trend === 'up' ? '+' : metric.trend === 'down' ? '-' : '~') + '0%'}
+                        </span>
                       </div>
-                      <span className="text-gray-700 dark:text-gray-300 leading-relaxed">{rec}</span>
-                    </li>
+                    </div>
                   ))}
-                </ul>
+                </div>
               </div>
             )}
 
+            {/* Charts Row */}
             {details.chart_data && (
               <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-700">
                 <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Analytics</h2>
