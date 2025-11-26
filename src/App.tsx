@@ -18,46 +18,41 @@ function App() {
     const [currentPage, setCurrentPage] = useState<'login' | 'register' | 'role' | 'dashboard' | 'details'>('login');
     const [showProfileMenu, setShowProfileMenu] = useState(false);
 
-    // Static data for dashboard
-    const headlines = [
-      {
-        id: '1',
-        title: 'Q4 Revenue Exceeds Targets',
-        summary: 'Strong performance across all segments with 32% YoY growth',
-        details: 'Our Q4 results demonstrate exceptional growth across all business segments. Revenue reached $2.8M, exceeding targets by 18%. Key drivers include increased customer acquisition, improved retention rates, and successful product launches in emerging markets.',
-        created_at: new Date().toISOString(),
-      },
-    ];
+    // Get API response from localStorage
+    const roiInsightsRaw = typeof window !== 'undefined' ? localStorage.getItem('roiInsights') : null;
+    let roiInsights: any = null;
+    try {
+      roiInsights = roiInsightsRaw ? JSON.parse(roiInsightsRaw) : null;
+    } catch {
+      roiInsights = null;
+    }
 
-    const cards = [
-      {
-        id: '1',
-        title: 'Customer Retention',
-        description: 'Current retention rate stands at 94.2%, up 2.3% from last quarter',
-        category: 'customer',
-        created_at: new Date().toISOString(),
-      },
-      {
-        id: '2',
-        title: 'Revenue Growth',
-        description: 'Total revenue increased by 32% year-over-year to $2.8M',
-        category: 'revenue',
-        created_at: new Date().toISOString(),
-      },
-      {
-        id: '3',
-        title: 'Operational Efficiency',
-        description: 'Operating costs reduced by 15% through automation initiatives',
-        category: 'operations',
-        created_at: new Date().toISOString(),
-      },
-    ];
+    // Extract data from API response
+    const date = roiInsights?.date || '';
+    const overview = roiInsights?.overview || '';
+    const headline = roiInsights?.headline || '';
+    const questions = roiInsights?.questions || [];
 
-    const metrics = [
-      { id: '1', title: 'Total Revenue', value: '$2.8M', change: '+32%', trend: 'up' as const, created_at: new Date().toISOString() },
-      { id: '2', title: 'Active Users', value: '15.2K', change: '+18%', trend: 'up' as const, created_at: new Date().toISOString() },
-      { id: '3', title: 'Conversion Rate', value: '8.4%', change: '+2.1%', trend: 'up' as const, created_at: new Date().toISOString() },
-    ];
+    // Headline cards: each question's headline
+    const dynamicHeadlines = questions.map((q: any, idx: number) => ({
+      id: String(idx + 1),
+      title: q.headline || '',
+      summary: q.summary || '',
+      details: q.details || '',
+      created_at: date,
+    }));
+
+    // Insight cards: each question as a card
+    const dynamicCards = questions.map((q: any, idx: number) => ({
+      id: String(idx + 1),
+      title: q.headline || '',
+      description: q.overview || '',
+      category: q.category || 'insight',
+      created_at: date,
+    }));
+
+    // Metrics (if available)
+    const metrics = roiInsights?.metrics || [];
 
     const [selectedHeadline, setSelectedHeadline] = useState<any>(null);
     const [selectedCard, setSelectedCard] = useState<any>(null);
@@ -216,14 +211,9 @@ function App() {
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
         <header className="bg-white dark:bg-gray-800 shadow-md border-b border-gray-200 dark:border-gray-700 sticky top-0 z-40">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                  Analytics Dashboard
-                </h1>
-                <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                  Real-time insights and performance metrics
-                </p>
+            <div className="flex items-center justify-between h-12">
+              <div className="flex items-center">
+                <img src="/logo.png" alt="Clarity Logo" className="h-48 w-auto" />
               </div>
               <div className="flex items-center gap-4">
                 <button
@@ -285,35 +275,32 @@ function App() {
         </header>
 
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-12">
-          <HeadlineSection headlines={headlines} onShowDetails={(headline) => {
+          {/* Show date at top */}
+          {date && (
+            <div className="mb-4 text-right text-sm text-gray-500 dark:text-gray-400">Date: {date}</div>
+          )}
+          {/* Overview section: overview + headline */}
+          {(overview || headline) && (
+            <div className="mb-8 p-6 bg-indigo-50 dark:bg-indigo-900/20 rounded-xl border border-indigo-200 dark:border-indigo-800">
+              <h2 className="text-2xl font-bold text-indigo-900 dark:text-indigo-200 mb-2">Overview</h2>
+              {overview && <p className="text-gray-700 dark:text-gray-300 mb-2">{overview}</p>}
+              {headline && <p className="text-gray-700 dark:text-gray-300 font-semibold">{headline}</p>}
+            </div>
+          )}
+          {/* Dynamic Headline Cards */}
+          <HeadlineSection headlines={dynamicHeadlines} onShowDetails={(headline) => {
             setSelectedHeadline(headline);
             setCardDetails({
-              insights: 'This headline represents a significant achievement in our organizational performance and demonstrates strong market positioning.',
-              insight_points: [
-                'Strong growth trajectory across all major business segments',
-                'Successful market expansion in emerging markets contributing 25% of growth',
-                'Improved operational efficiency reducing time to market by 30%',
-                'Enhanced customer satisfaction scores leading to increased retention',
-              ],
-              recommendations: [
-                'Scale successful strategies from emerging markets to other regions',
-                'Invest in product innovation to maintain competitive advantage',
-                'Expand team capacity to support continued growth momentum',
-                'Implement advanced analytics to identify next growth opportunities',
-              ],
+              insights: headline.summary,
+              insight_points: [],
+              recommendations: [],
               metrics: metrics,
-              chart_data: {
-                revenue: [
-                  { month: 'Q1', value: 2.0 },
-                  { month: 'Q2', value: 2.25 },
-                  { month: 'Q3', value: 2.55 },
-                  { month: 'Q4', value: 2.8 },
-                ],
-              },
+              chart_data: {},
             });
             setCurrentPage('details');
           }} />
-          <InsightCardsSection cards={cards} onShowDetails={handleCardDetails} />
+          {/* Dynamic Insight Cards */}
+          <InsightCardsSection cards={dynamicCards} onShowDetails={handleCardDetails} />
           {/* <KPISection metrics={metrics} /> */}
         </main>
 

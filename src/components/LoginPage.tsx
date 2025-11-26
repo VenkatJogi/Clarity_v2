@@ -56,8 +56,8 @@ export function LoginPage({ onSuccess, onSwitchToRegister }: LoginPageProps) {
       >
         <div className="absolute inset-0 bg-black/70" />
         <div className="relative z-10 text-center text-white space-y-6">
-          <h1 className="text-5xl font-bold">Welcome Back</h1>
-          <p className="text-xl text-gray-200 max-w-md">Access your dashboard and unlock powerful insights</p>
+          <h1 className="text-5xl font-bold">Clarity</h1>
+          <p className="text-xl text-gray-200 max-w-md">Real-time insights and performance metrics</p>
         </div>
       </div>
 

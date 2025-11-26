@@ -9,16 +9,20 @@ interface RoleSelectionPageProps {
 
 const roleOptions: Array<{ id: UserRole; title: string }> = [
   {
-    id: 'admin',
-    title: 'Administrator',
+    id: 'CFO',
+    title: 'CFO',
   },
   {
-    id: 'manager',
-    title: 'Manager',
+    id: 'CMO',
+    title: 'CMO',
   },
   {
-    id: 'analyst',
-    title: 'Analyst',
+    id: 'Marketing Manager',
+    title: 'Marketing Manager',
+  },
+  {
+    id: 'Marketing Analyst',
+    title: 'Marketing Analyst',
   },
 ];
 
@@ -33,10 +37,40 @@ export function RoleSelectionPage({ onRoleSelected }: RoleSelectionPageProps) {
     if (!selectedRole) return;
 
     setLoading(true);
-    selectRole(selectedRole);
-    setTimeout(() => {
-      onRoleSelected();
-    }, 600);
+    try {
+      // Call the API endpoint with the selected role
+      const response = await fetch(`http://127.0.0.1:5000/roi-insights/latest?role=${encodeURIComponent(selectedRole)}`);
+      console.log('API raw response:', response);
+      if (!response.ok) {
+        throw new Error(`API error: ${response.statusText}`);
+      }
+      let data;
+      try {
+        data = await response.json();
+      } catch (jsonError) {
+        console.error('Failed to parse JSON:', jsonError);
+        throw new Error('API response is not valid JSON');
+      }
+      console.log('API Response:', data);
+
+      // Validate expected fields
+      if (!data || typeof data !== 'object' || !('date' in data && 'overview' in data && 'headline' in data && 'questions' in data)) {
+        console.error('Unexpected API response structure:', data);
+        throw new Error('API response missing required fields');
+      }
+
+      // Store role and API response
+      selectRole(selectedRole);
+      // Store the API response in localStorage for use in dashboard
+      localStorage.setItem('roiInsights', JSON.stringify(data));
+      setTimeout(() => {
+        onRoleSelected();
+      }, 600);
+    } catch (error) {
+      console.error('Failed to fetch insights:', error);
+      alert(`Failed to load insights. Error: ${error instanceof Error ? error.message : String(error)}. See console for details.`);
+      setLoading(false);
+    }
   };
 
   return (
@@ -52,8 +86,8 @@ export function RoleSelectionPage({ onRoleSelected }: RoleSelectionPageProps) {
       >
         <div className="absolute inset-0 bg-black/70" />
         <div className="relative z-10 text-center text-white space-y-6">
-          <h1 className="text-5xl font-bold">Choose Your Role</h1>
-          <p className="text-xl text-gray-200 max-w-md">Select the role that best fits your needs to access customized features</p>
+          <h1 className="text-5xl font-bold">Clarity</h1>
+          <p className="text-xl text-gray-200 max-w-md">Real-time insights and performance metrics</p>
         </div>
       </div>
 

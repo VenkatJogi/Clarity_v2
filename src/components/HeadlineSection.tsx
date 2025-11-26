@@ -8,7 +8,7 @@ interface HeadlineSectionProps {
 export function HeadlineSection({ headlines, onShowDetails }: HeadlineSectionProps) {
   return (
     <div className="space-y-4">
-      <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Headlines</h2>
+      {/* <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Headlines</h2> */}
       <div className="grid grid-cols-1 gap-4">
         {headlines.slice(0, 1).map((headline) => (
           <div
@@ -19,9 +19,9 @@ export function HeadlineSection({ headlines, onShowDetails }: HeadlineSectionPro
               <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3 line-clamp-2">
                 {headline.title}
               </h3>
-              <p className="text-gray-700 dark:text-gray-300 mb-4 flex-grow line-clamp-3">
+              {/* <p className="text-gray-700 dark:text-gray-300 mb-4 flex-grow line-clamp-3">
                 {headline.summary}
-              </p>
+              </p> */}
               <button
                 onClick={() => onShowDetails(headline)}
                 className="text-left font-medium text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors duration-200"

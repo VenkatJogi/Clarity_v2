@@ -53,9 +53,9 @@ export function InsightCardsSection({ cards, onShowDetails }: InsightCardsSectio
                   {card.title}
                 </h3>
 
-                <p className="text-gray-600 dark:text-gray-400 mb-6 line-clamp-4 leading-relaxed">
+                {/* <p className="text-gray-600 dark:text-gray-400 mb-6 line-clamp-4 leading-relaxed">
                   {card.description}
-                </p>
+                </p> */}
 
                 <button
                   onClick={() => onShowDetails(card)}
